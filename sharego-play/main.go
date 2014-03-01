@@ -21,9 +21,11 @@ func main() {
 		"doc": "Haha this is is some text",
 	}
 	doc := sharego.NewDocument(dict)
-	component := sharego.NewInsertComponent([]string{"doc","0"}, "aaa")
 	op := sharego.Operation{}
-	op = append(op, component)
+	comp1 := sharego.NewInsertComponent([]string{"doc","0"}, "aaa ")
+	comp2 := sharego.NewDeleteComponent([]string{"doc","14"}, "is ")
+	op = append(op, comp1)
+	op = append(op, comp2)
 	doc.Apply(op)
 	subdoc, err := doc.Get([]string{"doc"})
 	if (err != nil) {
