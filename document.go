@@ -1,9 +1,5 @@
 package sharego
 
-import (
-	"net"
-)
-
 //This is document type. Dict is a very flexible struct to contain python like
 //dict structure. For now only supports string inserts and deletes. Checksums
 //is a mapping between the checksum of a document and the index within the ops
@@ -14,8 +10,6 @@ type Document struct {
 	content   Dict
 	checksums map[string]int
 	ops       []Operation
-	hosts     []string
-	listen    net.Listener
 }
 
 //Returns a new document containing initialized map, from dict.
