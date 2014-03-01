@@ -2,7 +2,7 @@ package sharego
 
 
 //Compares two strings to see if they are the same Path.
-func PathEquals(strslice1, strslice2 []string) (b bool) {
+func pathEquals(strslice1, strslice2 []string) (b bool) {
 	b = false
 	if len(strslice1) != len(strslice2) {
 		return

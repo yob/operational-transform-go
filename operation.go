@@ -17,7 +17,7 @@ func (op1 Operation) transform(op2 Operation) Operation {
 		for _, comp1 := range op1 {
 			comp2Path := comp2.Path[:len(comp2.Path)-1]
 			comp1Path := comp1.Path[:len(comp1.Path)-1]
-			if PathEquals(comp1Path, comp2Path) {
+			if pathEquals(comp1Path, comp2Path) {
 				comp1.transform(&op1, comp2)
 			}
 		}
