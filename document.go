@@ -10,6 +10,7 @@ type Document struct {
 //Returns a new document containing initialized map, from dict.
 func NewDocument(content Dict) (doc Document) {
 	doc = Document{
+		ops: make([]Operation, 0),
 		content: content,
 	}
 	return
