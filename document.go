@@ -90,8 +90,6 @@ func (doc *Document) ApplyToVersion(op Operation, version int) (err error) {
 	return nil
 }
 
-
-
 //In order to access portions of the document. path is the list of keys in
 //descending order to access final string.
 func (doc *Document) Get(path []string) (inner string, err error) {
