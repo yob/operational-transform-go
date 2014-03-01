@@ -5,11 +5,11 @@ import (
 )
 
 func newTestDocument() Document {
-	return Document{
-		ops:       make([]Operation, 0),
-		content: Dict{
+	return NewDocument(
+		Dict{
 			"doc": "Haha this is is some text",
-		}}
+		},
+	)
 }
 
 func TestDocumentRead(t *testing.T) {
