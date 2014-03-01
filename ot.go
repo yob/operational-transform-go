@@ -4,9 +4,9 @@ import (
 	"crypto/sha1"
 	"fmt"
 	"io"
+	"net"
 	"strconv"
 	"unsafe"
-    "net"
 )
 
 //This is document type. Dict is a very flexible struct to contain python like
@@ -19,8 +19,8 @@ type Document struct {
 	content   Dict
 	checksums map[string]int
 	ops       []Operation
-    hosts []string
-    listen net.Listener
+	hosts     []string
+	listen    net.Listener
 }
 
 //An operation is a list of components. To build a complex operation use
@@ -28,7 +28,7 @@ type Document struct {
 type Operation []Component
 
 //Components contains a Path ["doc", "toto", "0"], that is the list of keys
-//to descend to underlying strings and apply inserts and deletes contained 
+//to descend to underlying strings and apply inserts and deletes contained
 //within either si or Sd.
 type Component struct {
 	Path []string
@@ -84,13 +84,13 @@ func hash(content Dict) string {
 //Returns a new document containing initialized map, from dict.
 func NewDocument(content Dict) (doc Document) {
 	h := hash(content)
-    doc = Document{
+	doc = Document{
 		content: content,
 		checksums: map[string]int{
 			h: 0,
 		},
 	}
-    return
+	return
 }
 
 //Given the old position of an insert operation returns its new position
@@ -115,7 +115,7 @@ func transformPosition(oldpos int, comp Component) (newpos int) {
 
 }
 
-//Transforms a component against another one. We use dest to accumulate 
+//Transforms a component against another one. We use dest to accumulate
 //components because the transform of a component may result in several
 //components.
 func (comp1 Component) transform(dest *Operation, comp2 Component) {
@@ -172,7 +172,7 @@ func (e InvalidComponentError) Error() string {
 	return e.msg
 }
 
-//Returns the hash of the document. Used to determine version of doc (but 
+//Returns the hash of the document. Used to determine version of doc (but
 //timeline agnostic as it only depends on the content.
 func (doc Document) Checksum() string {
 	return hash(doc.content)
@@ -237,22 +237,22 @@ func (comp Component) setPosition(newpos int) {
 
 //HelperFunction to create a new component. To be used in all cases because
 //struct members are all private.
-func NewInsertComponent(Path []string, str string) (comp Component){
-    comp.Path = Path
-    comp.Si = str
-    return
+func NewInsertComponent(Path []string, str string) (comp Component) {
+	comp.Path = Path
+	comp.Si = str
+	return
 }
 
 //HelperFunction to create a new component. To be used in all cases because
 //struct members are all private.
-func NewDeleteComponent(path []string, str string) (comp Component){
-    comp.Path = path
-    comp.Sd = str
-    return
+func NewDeleteComponent(path []string, str string) (comp Component) {
+	comp.Path = path
+	comp.Sd = str
+	return
 }
 
 //In order to access portions of the document. path is the list of keys in
 //descending order to access final string.
-func (doc *Document) Get(path []string) (inner string, err error){
-    return doc.content.get(path)
+func (doc *Document) Get(path []string) (inner string, err error) {
+	return doc.content.get(path)
 }
