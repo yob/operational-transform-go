@@ -7,23 +7,6 @@ import (
 	"unsafe"
 )
 
-//Compares two strings to see if they are the same Path.
-func PathEquals(strslice1, strslice2 []string) (b bool) {
-	b = false
-	if len(strslice1) != len(strslice2) {
-		return
-	}
-	for i := 0; i < len(strslice1); i++ {
-		el1 := strslice1[i]
-		el2 := strslice2[i]
-		if el1 != el2 {
-			return
-		}
-	}
-	b = true
-	return
-}
-
 //hashes a Dict, to produce checksums used within Document struct. hashes reflects
 //the whole dict, both values and keys to be unique for each document.
 func hash(content Dict) string {
