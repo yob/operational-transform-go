@@ -23,7 +23,7 @@ func (doc Document) Version() int {
 //Applies an operation to this document. Version argument indicates what
 //doc version the operation was built against. It is useful when receiving
 //remote ops to know how to tranform received op against local ops.
-func (doc *Document) applyNoRemote(op Operation, version int) (err error) {
+func (doc *Document) ApplyToVersion(op Operation, version int) (err error) {
 	if version != len(doc.ops) {
 		transform_ops := doc.ops[version:]
 		for i := 0; i < len(transform_ops); i++ {
@@ -73,7 +73,7 @@ func (doc *Document) Get(path []string) (inner string, err error) {
 //connected documents.
 func (doc *Document) Apply(op Operation) (err error, finished chan bool) {
        version := doc.Version()
-       err = doc.applyNoRemote(op, version)
+       err = doc.ApplyToVersion(op, version)
        // comment this out until we have network support again
        //if err == nil {
        //        finished = make(chan bool, 1)

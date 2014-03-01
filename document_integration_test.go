@@ -34,7 +34,7 @@ func TestDocumentValidOps(t *testing.T) {
 		Path: []string{"doc", "12"},
 		Sd:   "is ",
 	}}
-	err := doc.applyNoRemote(op1, doc.Version())
+	err := doc.ApplyToVersion(op1, doc.Version())
 
 	if err != nil {
 		t.Errorf("Simple Operation failed (Error %q)", err)
@@ -62,11 +62,11 @@ func TestDocumentConcurrentLeft(t *testing.T) {
 	// Combination of both should end up in Hahaho this is some text
 
 	//RIGHT OP
-	err := doc.applyNoRemote(op2, version)
+	err := doc.ApplyToVersion(op2, version)
 	if err != nil {
 		t.Errorf("Simple Operation failed (Error %q)", err)
 	}
-	err = doc.applyNoRemote(op1, version)
+	err = doc.ApplyToVersion(op1, version)
 	if err != nil {
 		t.Errorf("Concurrent Left Operation failed (Error %q)", err)
 	}
@@ -93,11 +93,11 @@ func TestConcurrentRight(t *testing.T) {
 	// Combination of both should end up in Hahaho this is some text
 
 	//LEFT OP
-	err := doc.applyNoRemote(op1, version)
+	err := doc.ApplyToVersion(op1, version)
 	if err != nil {
 		t.Errorf("Simple Operation failed (Error %q)", err)
 	}
-	err = doc.applyNoRemote(op2, version)
+	err = doc.ApplyToVersion(op2, version)
 	if err != nil {
 		t.Errorf("Concurrent Right Operation failed (Error %q)", err)
 	}
@@ -117,7 +117,7 @@ func TestInvalidDeletes(t *testing.T) {
 		Path: []string{"doc", "0"},
 		Sd:   "is ",
 	}}
-	err := doc.applyNoRemote(op, doc.Version())
+	err := doc.ApplyToVersion(op, doc.Version())
 	if _, ok := err.(InvalidComponentError); !ok {
 		t.Error("Invalid DELETE did not raise error")
 	}
@@ -130,7 +130,7 @@ func BenchmarkApplyInserts(b *testing.B) {
 		Si:   "ha ",
 	}}
 	for i := 0; i < b.N; i++ {
-		doc.applyNoRemote(op, doc.Version())
+		doc.ApplyToVersion(op, doc.Version())
 	}
 }
 
@@ -145,6 +145,6 @@ func BenchmarkApplyDeletes(b *testing.B) {
 		Sd:   "H",
 	}}
 	for i := 0; i < b.N; i++ {
-		doc.applyNoRemote(op, doc.Version())
+		doc.ApplyToVersion(op, doc.Version())
 	}
 }
