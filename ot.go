@@ -256,3 +256,17 @@ func NewDeleteComponent(path []string, str string) (comp Component) {
 func (doc *Document) Get(path []string) (inner string, err error) {
 	return doc.content.get(path)
 }
+
+//Applies an operation to a document. This one will apply only local ops to
+//the last version of the document. It will automatically send the op to
+//connected documents.
+func (doc *Document) Apply(op Operation) (err error, finished chan bool) {
+       checksum := doc.Checksum()
+       err = doc.applyNoRemote(op, checksum)
+       // comment this out until we have network support again
+       //if err == nil {
+       //        finished = make(chan bool, 1)
+       //        doc.sendRemote(op, checksum, finished)
+       //}
+       return
+}
