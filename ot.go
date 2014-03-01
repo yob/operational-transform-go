@@ -1,4 +1,4 @@
-package ot
+package sharego
 
 import (
 	"crypto/sha1"
