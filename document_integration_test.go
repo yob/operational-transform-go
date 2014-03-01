@@ -39,7 +39,7 @@ func TestDocumentValidOps(t *testing.T) {
 	if err != nil {
 		t.Errorf("Simple Operation failed (Error %q)", err)
 	}
-	result, _ := doc.content.get([]string{"doc"})
+	result, _ := doc.Snapshot().get([]string{"doc"})
 	if result != target {
 		t.Errorf("simple Operation failed %q != %q", result, target)
 	}
@@ -70,7 +70,7 @@ func TestDocumentConcurrentLeft(t *testing.T) {
 	if err != nil {
 		t.Errorf("Concurrent Left Operation failed (Error %q)", err)
 	}
-	result, _ := doc.content.get([]string{"doc"})
+	result, _ := doc.Snapshot().get([]string{"doc"})
 	if result != target {
 		t.Errorf("Concurrent Left Operation failed %q != %q", result, target)
 	}
@@ -101,7 +101,7 @@ func TestConcurrentRight(t *testing.T) {
 	if err != nil {
 		t.Errorf("Concurrent Right Operation failed (Error %q)", err)
 	}
-	result, _ := doc.content.get([]string{"doc"})
+	result, _ := doc.Snapshot().get([]string{"doc"})
 	if result != target {
 		t.Errorf("Concurrent Right Operation failed %q != %q", result, target)
 	}

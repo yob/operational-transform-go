@@ -21,6 +21,11 @@ func (doc Document) Version() int {
 	return len(doc.ops)
 }
 
+// Returns the latest version of the document
+func (doc *Document) Snapshot() Dict {
+	return doc.content
+}
+
 //Applies an operation to this document. Version argument indicates what
 //doc version the operation was built against. It is useful when receiving
 //remote ops to know how to tranform received op against local ops.
