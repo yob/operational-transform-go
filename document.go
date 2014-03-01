@@ -1,43 +1,31 @@
 package sharego
 
 //This is document type. Dict is a very flexible struct to contain python like
-//dict structure. For now only supports string inserts and deletes. Checksums
-//is a mapping between the checksum of a document and the index within the ops
-//array. It is used when receiving remote ops that where built against old versions
-//of the doc to transform received operation against the operation that occured
-//locally in the meantime.
+//dict structure. For now only supports string inserts and deletes.
 type Document struct {
 	content   Dict
-	checksums map[string]int
 	ops       []Operation
 }
 
 //Returns a new document containing initialized map, from dict.
 func NewDocument(content Dict) (doc Document) {
-	h := hash(content)
 	doc = Document{
 		content: content,
-		checksums: map[string]int{
-			h: 0,
-		},
 	}
 	return
 }
 
-//Returns the hash of the document. Used to determine version of doc (but
-//timeline agnostic as it only depends on the content.
-func (doc Document) Checksum() string {
-	return hash(doc.content)
+//Every operation applied to the document will increment the version number by 1
+func (doc Document) Version() int {
+	return len(doc.ops)
 }
 
-//Applies an operation.checksum argument represents what
-//checksum the document was built against. It is useful when receiving
+//Applies an operation to this document. Version argument indicates what
+//doc version the operation was built against. It is useful when receiving
 //remote ops to know how to tranform received op against local ops.
-//Apply func is in network.go
-func (doc *Document) applyNoRemote(op Operation, checksum string) (err error) {
-	last_op_index := doc.checksums[checksum]
-	if last_op_index != len(doc.ops) {
-		transform_ops := doc.ops[last_op_index:]
+func (doc *Document) applyNoRemote(op Operation, version int) (err error) {
+	if version != len(doc.ops) {
+		transform_ops := doc.ops[version:]
 		for i := 0; i < len(transform_ops); i++ {
 			top := transform_ops[i]
 			op = op.transform(top)
@@ -71,7 +59,6 @@ func (doc *Document) applyNoRemote(op Operation, checksum string) (err error) {
 		}
 	}
 	doc.ops = append(doc.ops, op)
-	doc.checksums[doc.Checksum()] = len(doc.ops)
 	return nil
 }
 
@@ -85,12 +72,12 @@ func (doc *Document) Get(path []string) (inner string, err error) {
 //the last version of the document. It will automatically send the op to
 //connected documents.
 func (doc *Document) Apply(op Operation) (err error, finished chan bool) {
-       checksum := doc.Checksum()
-       err = doc.applyNoRemote(op, checksum)
+       version := doc.Version()
+       err = doc.applyNoRemote(op, version)
        // comment this out until we have network support again
        //if err == nil {
        //        finished = make(chan bool, 1)
-       //        doc.sendRemote(op, checksum, finished)
+       //        doc.sendRemote(op, version, finished)
        //}
        return
 }
