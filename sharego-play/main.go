@@ -18,10 +18,17 @@ import (
 // it's alive!
 func main() {
 	dict := sharego.Dict{
-			"doc": "Haha this is is some text",
+		"doc": "Haha this is is some text",
 	}
 	doc := sharego.NewDocument(dict)
-	subdoc, _ := doc.Get([]string{"doc"})
+	component := sharego.NewInsertComponent([]string{"doc","0"}, "aaa")
+	op := sharego.Operation{}
+	op = append(op, component)
+	doc.Apply(op)
+	subdoc, err := doc.Get([]string{"doc"})
+	if (err != nil) {
+		log.Fatal("Error getting doc")
+	}
 	log.Println(subdoc)
 }
 
