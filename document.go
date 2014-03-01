@@ -31,6 +31,16 @@ func (doc *Document) Snapshot() (Dict, error) {
 	return result, nil
 }
 
+// Returns the requested version of the document
+func (doc *Document) SnapshotVersion(version int) (Dict, error) {
+	ops := doc.ops[0:version]
+	result, err := transform(doc.initial, ops)
+	if (err != nil) {
+		return nil, err
+	}
+	return result, nil
+}
+
 // Starting with an initial Dict, apply 0 or more operations to it and return
 // the result.
 func transform(content Dict, ops []Operation) (Dict, error) {

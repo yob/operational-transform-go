@@ -128,6 +128,35 @@ func TestDocumentSnapshotInvalidDeletes(t *testing.T) {
 	}
 }
 
+func TestDocumentSnapshotVersionWithValidOps(t *testing.T) {
+	doc := newTestDocument()
+	target := "Hahaho this is is some text"
+	op1 := Operation{Component{
+		Path: []string{"doc", "4"},
+		Si:   "ho",
+	}}
+	op2 := Operation{Component{
+		Path: []string{"doc", "12"},
+		Sd:   "is ",
+	}}
+	err := doc.ApplyToVersion(op1, doc.Version())
+
+	if err != nil {
+		t.Errorf("Simple Operation failed (Error %q)", err)
+	}
+	err = doc.ApplyToVersion(op2, doc.Version())
+
+	if err != nil {
+		t.Errorf("Simple Operation failed (Error %q)", err)
+	}
+
+	dict, _ := doc.SnapshotVersion(1)
+	result, _ := dict.get([]string{"doc"})
+	if result != target {
+		t.Errorf("simple Operation failed %q != %q", result, target)
+	}
+}
+
 func BenchmarkDocumentApplyToVersionWithInserts(b *testing.B) {
 	doc := newTestDocument()
 	op := Operation{Component{
