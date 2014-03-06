@@ -14,4 +14,8 @@ offer REST and browserchannel interfaces.
 
 ## Usage
 
-    
+At this stage, there's no way to interactively use sharego. There's a test app
+you can run to see document editing in action.
+
+    go install github.com/yob/sharego/sharego-play
+    ./bin/sharego-play
